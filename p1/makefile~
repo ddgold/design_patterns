@@ -1,0 +1,3 @@
+run: reflect.java
+	javac reflect.java
+	jar cfe reflect.jar reflect reflect.class

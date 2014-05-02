@@ -1,0 +1,285 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>The bali2javacc Tool</title>
+  </head>
+
+  <body bgcolor="white">
+
+      <table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+	  <tr>
+	    <td WIDTH="78">
+	      <font face="Arial">
+		<img border="0" src="images/FopButton3.jpg" width="80" height="64">
+	      </font>
+	    </td>
+	    <td WIDTH="688" BGCOLOR="#00FFFF">
+	      <h1>
+		<font face="Arial" color="#0000FF">
+		  The quark Tool
+		</font>
+	      </h1>
+	    </td>
+	  </tr>
+      </table>
+
+    <p>
+      <font face="Arial">The <b>quark</b> tool was designed to illustrate the different ways in which 
+      module expressions are composed in different program synthesis paradigms.&nbsp; 
+      Four paradigms are considered: Ahead, AspectJ, Aspectual Mixin Layers++ (a 
+      generalization of Aspectual Mixin Layers that has pointcuts advising 
+      multiple pieces of advice), 
+      and General (a generalization of the previous three).&nbsp; The 
+      capabilities -- supporting, <b>introductions</b>, <b>local</b> (bounded) advice, 
+      <b>global</b> 
+      (unbounded) advice, and higher-order advice (<b>hoa</b>) -- of each of these models is 
+      tabulated below.</font></p>
+
+      <div align="center">
+        <center>
+        <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
+          <tr>
+            <td>&nbsp;</td>
+            <td><font face="Arial">&nbsp;introductions &nbsp; </font> </td>
+            <td><font face="Arial">&nbsp;local&nbsp; </font></td>
+            <td><font face="Arial">&nbsp;global</font></td>
+            <td><font face="Arial">&nbsp;hoa</font> </td>
+          </tr>
+          <tr>
+            <td><font face="Arial">Ahead</font></td>
+            <td align="center"><font face="Arial">x</font></td>
+            <td align="center"><font face="Arial">x</font></td>
+            <td align="center">&nbsp;</td>
+            <td align="center">&nbsp;</td>
+          </tr>
+          <tr>
+            <td><font face="Arial">AspectJ</font></td>
+            <td align="center"><font face="Arial">x</font></td>
+            <td align="center">&nbsp;</td>
+            <td align="center"><font face="Arial">x</font></td>
+            <td align="center">&nbsp;</td>
+          </tr>
+          <tr>
+            <td><font face="Arial">Aspectual Mixin Layers++</font></td>
+            <td align="center"><font face="Arial">x</font></td>
+            <td align="center">&nbsp;</td>
+            <td align="center"><font face="Arial">x</font></td>
+            <td align="center"><font face="Arial">x</font></td>
+          </tr>
+          <tr>
+            <td><font face="Arial">General</font></td>
+            <td align="center"><font face="Arial">x</font></td>
+            <td align="center"><font face="Arial">x</font></td>
+            <td align="center"><font face="Arial">x</font></td>
+            <td align="center"><font face="Arial">x</font></td>
+          </tr>
+        </table>
+        </center>
+      </div>
+
+      <p><font face="Arial">An ultimate goal of this work is to show a general 
+      theory of program synthesis that unifies aspects, ahead refinements, and 
+      aspect refinements.&nbsp; It is based on a staged meta-programming 
+      approach: the changes a feature makes to a program will be defined by a 
+      quark, an n-tuple of terms.&nbsp; The theory will tell us how to weave 
+      (transform) each term of a quark into a program.&nbsp; The <b>quark</b> 
+      tool illustrates a two-level algebra: at the top level are feature 
+      expressions.&nbsp; These expressions are then transformed into module 
+      expressions, which implement introductions, advice, and higher-order 
+      advice.&nbsp; Once the feature expression of a program is defined, a 
+      module expression for it is synthesized.&nbsp; This expression is then 
+      evaluated to produce a module expression for the generated program.&nbsp; 
+      This is an example of staged meta-programming: a feature expression 
+      generates a module expression, which then is evaluated to generate a 
+      program.</font></p>
+      <ul>
+        <li><font face="Arial"><a href="#Invoking Quark">Invoking Quark</a></font></li>
+        <li><font face="Arial"><a href="#A Tour">A Tour</a></font></li>
+        <li><font face="Arial"><a href="#Implementation Notes">Implementation 
+        Notes</a></font></li>
+      </ul>
+
+    <table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+	<tr>
+	  <td WIDTH="788">
+	    <h2>
+	      <font face="Arial" color="#0000FF"><a name="Invoking Quark">Invoking Quark</a></font></h2>
+	  </td>
+	</tr>
+    </table>
+
+      <p><font face="Arial"><b>quark</b> has no parameters.&nbsp; It is invoked 
+      from the command line by:</font></p>
+      <blockquote>
+
+      <p><font face="Courier New">&gt; java quark.Main</font></p>
+      </blockquote>
+
+      <p><font face="Arial">The <b>quark.jar</b> file should be on your 
+      classpath.</font></p>
+
+    <table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+	<tr>
+	  <td WIDTH="788">
+	    <h2>
+	      <font color="#0000FF" face="Arial"><a name="A Tour">A Tour</a></font></h2>
+	  </td>
+	</tr>
+    </table>
+
+      <p><font face="Arial">The quark tool screen is shown below, along with a 
+      labeling of its key panels:</font></p>
+      <p><img border="0" src="images/quark.1.jpg" width="758" height="355"></p>
+      <p><font face="Arial">A feature is defined by a quark.&nbsp; A <b>quark</b> 
+      is a 4-tuple that may consist of an introduction, local advice, global 
+      advice, and a higher-order advice (hoa).&nbsp; Different model types offer 
+      a subset of these terms.&nbsp; You can select the model that you want to 
+      use in the Mode Type drop-down menu.</font></p>
+      <p><font face="Arial">To the right of the <b>Model Type</b>, you can 
+      select which terms will be in a particular quark.&nbsp; In the above 
+      figure, a quark has both local advice and introductions.&nbsp; By clicking 
+      on term checkboxes, you can customize the contents of a quark.</font></p>
+      <p><font face="Arial">The selected checkbox to the right of the <b>Model 
+      Type</b> sets whether any or all terms are selected in a quark by default.</font></p>
+      <p><font face="Arial">When you click the <b>Apply Quark</b> button, the 
+      quark you specified is woven into a program.&nbsp; Initially, you have a 
+      program called Base which is modeled by the module expression 'p'.&nbsp; 
+      The figure above shows what happens after <b>Apply Quark</b> has been 
+      clicked: a local advice is woven into p and an introduction is added.&nbsp; 
+      The <b>Feature Expression</b> panel shos the feature expression -- in this 
+      case, its feature F1 (which consists of local advice and an introduction) 
+      has been woven into Base.&nbsp; Each time you click <b>Apply Quark</b>, 
+      you are applying a new feature to the expression in the <b>Feature 
+      Expression</b> panel.&nbsp; The corresponding module expression is shown 
+      below in the <b>Module Expression</b> panel, and a pseudo evaluation of 
+      the module expression is shown in the <b>Program</b> panel.&nbsp; Note 
+      that the <b>Module Expression </b>panel actually shows a list of 
+      expressions, where the bottom-most expression is the most recent module 
+      expression produced.&nbsp; (This allows you to see the sequence of 
+      transformations that have been applied).&nbsp; You can start a new 
+      computation by clicking the <b>Clear Module Expression</b> button.</font></p>
+      <p><font face="Arial">Note that the order of quark term weaving is:</font></p>
+      <ol>
+        <li><font face="Arial">apply higher-order advice</font></li>
+        <li><font face="Arial">apply local advice</font></li>
+        <li><font face="Arial">apply introductions</font></li>
+        <li><font face="Arial">apply global advice</font></li>
+      </ol>
+      <p><font face="Arial">Notation:</font></p>
+      <ul>
+        <li><font face="Arial">introductions are added by +</font></li>
+        <li><font face="Arial">advice is composed by a() or a1.a2</font></li>
+        <li><font face="Arial">higher order advice is modeled by a function h[ ] 
+        using square brackets</font></li>
+        <li><font face="Arial">composing higher order advice is function 
+        composition, denoted by * (just so that you can visually detect where 
+        argument boundaries lie).</font></li>
+      </ul>
+      <p><font face="Arial">Have fun!</font></p>
+
+    <table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+	<tr>
+	  <td WIDTH="788">
+	    <h2>
+	      <a name="Implementation Notes"><font face="Arial" color="#0000FF">
+          Implementation Notes</font></a></h2>
+	  </td>
+	</tr>
+    </table>
+
+      <p><font face="Arial">The <b>quark</b> tool generates module expressions 
+      in the following grammar:</font></p>
+      <blockquote>
+        <p><font face="Courier New">I&nbsp; :&nbsp; intro&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        :: intro<br>
+&nbsp;&nbsp; |&nbsp; intro + I&nbsp;&nbsp; :: intsum<br>
+&nbsp;&nbsp; |&nbsp; A(I)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :: advprog<br>
+&nbsp;&nbsp; |&nbsp; G(I)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :: gadvprog<br>
+&nbsp;&nbsp; ;</font></p>
+        <p><font face="Courier New">A&nbsp; :&nbsp; advice&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        :: advice<br>
+&nbsp;&nbsp; |&nbsp; advice . A&nbsp; :: advsum<br>
+&nbsp;&nbsp; |&nbsp; H[A]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :: hoaadv<br>
+&nbsp;&nbsp; ;</font></p>
+        <p><font face="Courier New">G&nbsp; :&nbsp; gadvice&nbsp;&nbsp;&nbsp;&nbsp; 
+        :: gadvice<br>
+&nbsp;&nbsp; |&nbsp; gadvice . G :: gadvsum<br>
+&nbsp;&nbsp; |&nbsp; H[G]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :: ghoaadv<br>
+&nbsp;&nbsp; ;</font></p>
+        <p><font face="Courier New">H&nbsp; :&nbsp; hoa&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        :: hoa<br>
+&nbsp;&nbsp; |&nbsp; hoa * H&nbsp;&nbsp;&nbsp;&nbsp; :: hoasum<br>
+&nbsp;&nbsp; ;</font></p>
+      </blockquote>
+      <p><font face="Arial">Each pattern (right-hand side of a production) has a 
+      name, indicated by the <b>::name</b> tag.&nbsp; When a production is 
+      recognized, an instance of a class with the pattern's name is 
+      instantiated.&nbsp; So an expression (intro + intro) is a tree rooted by 
+      an intsum object, whose left and right arguments are intro objects.&nbsp; 
+      All productions are instances of the class tree.&nbsp; A class diagram, 
+      which is derived from the above grammar, is shown below:</font></p>
+      <p><img border="0" src="images/classhier.jpg" width="585" height="316"></p>
+      <p><font face="Arial">There are 4 different transformations that can be 
+      applied to a tree:</font></p>
+      <ul>
+        <li><font face="Arial">apply( intro i ) -- weave in an introduction</font></li>
+        <li><font face="Arial">apply( advice a ) -- weave in a local advice</font></li>
+        <li><font face="Arial">apply( gadvice g ) -- weave in a global advice</font></li>
+        <li><font face="Arial">apply( hoa h ) -- weave in a higher-order advice</font></li>
+      </ul>
+      <p><font face="Arial">Notice that i, a, g, and h are names of terms. In 
+      reality, an introduction can be replaced with a sum of introductions, an<br>
+      advice can be replaced with a composition of advice, etc. In addition to 
+      the above methods that transform (weave) module expressions, there are two 
+      additional functions:</font></p>
+      <ul>
+        <li><font face="Arial">toString( ) -- convert an expression into a 
+        pretty-printed string</font></li>
+        <li><font face="Arial">eval( ) -- do a pseudo-evaluation of an 
+        expression</font></li>
+      </ul>
+      <p><font face="Arial">Notation for expressions is simple. Here are some 
+      examples:</font></p>
+      <ul>
+        <li><font face="Arial">i1+a1(p) means weave advice a1 into program p and 
+        add introduction i1</font></li>
+        <li><font face="Arial">g1(i1+p) means add introduction i1 to p and weave 
+        global advice g1</font></li>
+        <li><font face="Arial">h2[g1](i1+p) means apply higher-order advice h2 
+        to global advice g1 to produce some refined advice g'; weave g' into the 
+        program that is the sum of i1 and p</font></li>
+      </ul>
+      <p><font face="Arial">The programs that are produced by the above 
+      expressions are trivially evaluated:</font></p>
+      <ul>
+        <li><font face="Arial">i1+a1p means a1p is the introduction that results 
+        from a1(p)<br>
+&nbsp;</font></li>
+        <li><font face="Arial">g1i1 + g1p means g1i1 is the introduction that 
+        results from g1(i1) and g1p is the introduction that results from g1(p)<br>
+&nbsp;</font></li>
+        <li><font face="Arial">h1g1i1 + h2g1p means h1g1i is the introduction 
+        that results from h1[g1](i1) and h1g1p is the introduction that results 
+        from h1[g1](p)</font></li>
+      </ul>
+
+    <hr>
+    <p><font face="Arial"><b><a href="index.html">ATS Home Page</a></b></font></p>
+    <p>
+      <font face="Arial">
+      <b>
+	Copyright © Software Systems Generator Research Group.
+	All rights reserved.
+	<br>
+	<!-- Created: Wed Apr 30 16:23:08 CDT 2003 -->
+	<!-- hhmts start -->
+      Last modified:
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%m/%d/%Y" startspan -->02/04/2006<!--webbot bot="Timestamp" endspan i-checksum="12556" -->
+<!-- hhmts end -->
+      </b>
+      </font>
+      <p>
+  </p>
+
+  </body>
+</html>

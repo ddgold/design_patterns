@@ -1,0 +1,4 @@
+for i in CarRental Comp DecayProduct diagram1 squirrel straight ; do
+   echo Testing Conformance of $i
+   java mdelite.Conform violet $i
+done

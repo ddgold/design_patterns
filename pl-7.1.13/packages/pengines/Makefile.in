@@ -1,0 +1,80 @@
+################################################################
+# SWI-Prolog Pengines package
+# Author:    Torbjörn Lager, Jan Wielemaker
+# Copyright: LGPL (see COPYING or www.gnu.org
+################################################################
+
+PACKAGE=pengines
+DOC=pengines
+DOCIMG=penarch.png pltpruncolour.png pltpsynch.png
+include ../Makefile.defs
+JSDIR=$(DESTDIR)$(PLLIBDIR)/http/web/js
+EXDIR=$(DESTDIR)$(PKGEXDIR)/pengines
+
+LIBPL=		pengines.pl term_to_json.pl
+JS=		web/js/pengines.js
+
+all::
+		@echo "Nothing to be done for this package"
+
+install:	$(LIBPL) $(JS)
+		mkdir -p $(JSDIR)
+		for f in $(LIBPL); do \
+		  $(INSTALL_DATA) $$f $(DESTDIR)$(PLLIBDIR); \
+		done
+		for f in $(JS); do \
+		  $(INSTALL_DATA) $$f $(JSDIR); \
+		done
+		$(MKINDEX)
+
+ln-install::
+		$(MAKE) INSTALL_DATA="../ln-install" INSTALL_PROGRAM="../ln-install" install
+
+rpm-install:	install
+
+pdf-install:	install-examples
+		$(INSTALL_DATA) $(DOC).pdf $(DESTDIR)$(PKGDOCDIR)
+
+html-install:	install-examples
+		$(INSTALL_DATA) $(DOC).html $(DOCIMG) $(DESTDIR)$(PKGDOCDIR)
+
+install-examples::
+		mkdir -p $(EXDIR)/web
+		(cd examples && $(INSTALL_DATA) *.pl $(EXDIR))
+		(cd examples/web && $(INSTALL_DATA) *.html *.js *.png $(EXDIR)/web)
+
+uninstall:
+		(cd $(PLLIBDIR) && rm -f $(LIBPL))
+		(cd $(JSDIR) && rm -f $(JS))
+
+
+check::
+		$(PL) -q -f test_pengines.pl -g test_pengines,halt -t 'halt(1)'
+
+
+################################################################
+# Documentation
+################################################################
+
+TEXEXTRA=	pendoc.tex penlib.tex termtojson.tex
+$(TEX):		$(TEXEXTRA)
+
+pendoc.tex:	pendoc.md
+		$(PLTOTEX) --out=pendoc.tex pendoc.md
+penlib.tex:	pengines.pl
+		$(PLTOTEX) --subsection --out=penlib.tex 'library(pengines)'
+termtojson.tex:	term_to_json.pl
+		$(PLTOTEX) --subsection 'library(term_to_json)'
+
+################################################################
+# Clean
+################################################################
+
+clean:
+		rm -f *~ *% config.log
+		rm -f pendoc.tex pengines.tex penlib.tex termtojson.tex
+
+distclean:	clean
+		rm -f config.h config.cache config.status Makefile
+		rm -rf autom4te.cache
+
